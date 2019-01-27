@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.flightscanner.entities.Flight;
-import com.flightscanner.dao.FlightDao;
 import com.flightscanner.dao.FlightRepositoryImpl;
 
 @Controller
@@ -29,16 +28,16 @@ public class FlightController {
 	}
 
 	/*
-	 * Returns game status.
+	 * Returns flights.
 	 * 
-	 * @param  gameId 		game id
-	 * @return      		game status
+	 * @return      		list of flights
  	 */
 	@GetMapping(path="/search")
-	public @ResponseBody List<Flight> searchFlights (@RequestParam(required = false) String source, @RequestParam(required = false) String destination, @RequestParam(required = false) Long startTime, @RequestParam(required = false) Long endTime) {
+	public @ResponseBody List<Flight> searchFlights (@RequestParam(required = false) String source, @RequestParam(required = false) String destination, 
+	@RequestParam(required = false) Long startTime, @RequestParam(required = false) Long endTime, @RequestParam(required = false) Integer pageSize) {
 		logger.info("Got flight search request");
 		
-		return flightImpl.findBooksByAuthorNameAndTitle(source, destination, startTime, endTime);
+		return flightImpl.findBooksByAuthorNameAndTitle(source, destination, startTime, endTime, pageSize);
 	}
 
 	

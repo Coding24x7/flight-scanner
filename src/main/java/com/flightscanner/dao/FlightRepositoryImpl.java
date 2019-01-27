@@ -23,7 +23,7 @@ public class FlightRepositoryImpl {
         this.em = em;
     }
 
-    public List<Flight> findBooksByAuthorNameAndTitle(String source, String destination, Long startTime, Long endTime) {
+    public List<Flight> findBooksByAuthorNameAndTitle(String source, String destination, Long startTime, Long endTime, Integer pageSize) {
         CriteriaBuilder cb = em.getCriteriaBuilder();
         CriteriaQuery<Flight> cq = cb.createQuery(Flight.class);
 
@@ -51,6 +51,16 @@ public class FlightRepositoryImpl {
 		cq.orderBy(cb.asc(flight.get("departure")));
 
         TypedQuery<Flight> query = em.createQuery(cq);
+
+        if (pageSize != null) {
+            // remote api are returning mix results, 
+            // no garuntee we always get timestamp greater that
+            // all old responses... so page entinties are changing
+            // in such scenario, startTime and pageSize combinamtion is useful
+            query.setFirstResult(0);
+            query.setMaxResults(pageSize);
+        }
+
         return query.getResultList();
     }
 
